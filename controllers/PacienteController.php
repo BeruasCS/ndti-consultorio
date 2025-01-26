@@ -67,37 +67,35 @@ class PacienteController extends Controller
      * @return string|\yii\web\Response
      */
     public function actionCreate()
-    {
-        $model = new Paciente();
+{
+    $model = new Paciente();
 
-        if ($this->request->isPost) {
-            $model->load($this->request->post());
-            $model->documento = UploadedFile::getInstance($model, 'documento');
-
-            if ($model->validate()) {
-                if ($model->documento) {
-                    $uploadPath = 'uploads/documentos/';
-                    
-                    // Verifica e cria o diretório, se necessário
-                    if (!is_dir($uploadPath)) {
-                        mkdir($uploadPath, 0777, true);
-                    }
-
-                    $filePath = $uploadPath . uniqid() . '.' . $model->documento->extension;
-                    if ($model->documento->saveAs($filePath)) {
-                        $model->documento = $filePath; // Salva o caminho do arquivo no banco de dados
-                    }
+    if ($this->request->isPost) {
+        $model->load($this->request->post());
+        $model->documento = UploadedFile::getInstance($model, 'documento');
+        
+        if ($model->validate()) {
+            if ($model->documento) {
+                $uploadPath = 'uploads/documentos/';
+                if (!is_dir($uploadPath)) {
+                    mkdir($uploadPath, 0777, true);
                 }
-                if ($model->save()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
+                $filePath = $uploadPath . uniqid() . '.' . $model->documento->extension;
+                if ($model->documento->saveAs($filePath)) {
+                    $model->documento = $filePath; // Aqui você salva o caminho no banco
                 }
             }
+            if ($model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
     }
+
+    return $this->render('create', [
+        'model' => $model,
+    ]);
+}
+
 
 
     /**
@@ -110,27 +108,32 @@ class PacienteController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+    
         if ($this->request->isPost) {
             $model->load($this->request->post());
             $file = UploadedFile::getInstance($model, 'documento');
-
+    
             if ($file) {
-                $filePath = 'uploads/documentos/' . uniqid() . '.' . $file->extension;
+                $uploadPath = 'uploads/documentos/';
+                if (!is_dir($uploadPath)) {
+                    mkdir($uploadPath, 0777, true);
+                }
+                $filePath = $uploadPath . uniqid() . '.' . $file->extension;
                 if ($file->saveAs($filePath)) {
-                    $model->documento = $filePath;
+                    $model->documento = $filePath; // Aqui você atualiza o caminho no banco
                 }
             }
-
+    
             if ($model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         }
-
+    
         return $this->render('update', [
             'model' => $model,
         ]);
     }
+    
 
     /**
      * Deletes an existing Paciente model.
