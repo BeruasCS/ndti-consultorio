@@ -7,6 +7,10 @@ use app\models\HistoricomedicoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
+use Yii;
+
+
 
 /**
  * HistoricomedicoController implements the CRUD actions for Historicomedico model.
@@ -68,19 +72,34 @@ class HistoricomedicoController extends Controller
     public function actionCreate()
     {
         $model = new Historicomedico();
-
+    
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            // Carrega os dados do formulário no modelo
+            if ($model->load($this->request->post())) {
+                // Obtém o arquivo enviado
+                $model->documento = UploadedFile::getInstance($model, 'documento');
+    
+                // Salva o modelo no banco
+                if ($model->save()) {
+                    // Tenta salvar o arquivo, se houver
+                    $fileName = $model->uploadDocumento();
+                    if ($fileName) {
+                        Yii::$app->session->setFlash('success', 'Histórico criado com sucesso e documento salvo!');
+                    } else {
+                        Yii::$app->session->setFlash('warning', 'Histórico criado, mas o documento não foi salvo.');
+                    }
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
             }
         } else {
             $model->loadDefaultValues();
         }
-
+    
         return $this->render('create', [
             'model' => $model,
         ]);
     }
+    
 
     /**
      * Updates an existing Historicomedico model.

@@ -7,6 +7,7 @@ use app\models\PacienteSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * PacienteController implements the CRUD actions for Paciente model.
@@ -66,22 +67,38 @@ class PacienteController extends Controller
      * @return string|\yii\web\Response
      */
     public function actionCreate()
-{
-    $model = new Paciente();
+    {
+        $model = new Paciente();
 
-    if ($this->request->isPost) {
-        if ($model->load($this->request->post()) && $model->save()) {
-            // Redireciona para a criação do Historicomedico com o paciente_id
-            return $this->redirect(['historicomedico/create', 'paciente_id' => $model->id]);
+        if ($this->request->isPost) {
+            $model->load($this->request->post());
+            $model->documento = UploadedFile::getInstance($model, 'documento');
+
+            if ($model->validate()) {
+                if ($model->documento) {
+                    $uploadPath = 'uploads/documentos/';
+                    
+                    // Verifica e cria o diretório, se necessário
+                    if (!is_dir($uploadPath)) {
+                        mkdir($uploadPath, 0777, true);
+                    }
+
+                    $filePath = $uploadPath . uniqid() . '.' . $model->documento->extension;
+                    if ($model->documento->saveAs($filePath)) {
+                        $model->documento = $filePath; // Salva o caminho do arquivo no banco de dados
+                    }
+                }
+                if ($model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            }
         }
-    } else {
-        $model->loadDefaultValues();
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
-    return $this->render('create', [
-        'model' => $model,
-    ]);
-}
 
     /**
      * Updates an existing Paciente model.
@@ -94,8 +111,20 @@ class PacienteController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($this->request->isPost) {
+            $model->load($this->request->post());
+            $file = UploadedFile::getInstance($model, 'documento');
+
+            if ($file) {
+                $filePath = 'uploads/documentos/' . uniqid() . '.' . $file->extension;
+                if ($file->saveAs($filePath)) {
+                    $model->documento = $filePath;
+                }
+            }
+
+            if ($model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [

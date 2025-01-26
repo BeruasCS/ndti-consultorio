@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
 
 <div class="paciente-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <?= $form->field($model, 'nome_completo')->textInput(['maxlength' => true]) ?>
 
@@ -45,6 +45,9 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'contato_emergencia')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'id_usuario')->textInput() ?>
+
+    <?= $form->field($model, 'documento')->fileInput() ?>
+
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

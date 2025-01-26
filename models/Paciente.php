@@ -36,6 +36,8 @@ class Paciente extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    public $documento; // Novo atributo para upload de arquivo
+
     public static function tableName()
     {
         return 'paciente';
@@ -59,10 +61,8 @@ class Paciente extends \yii\db\ActiveRecord
             [['cep'], 'string', 'max' => 8],
             [['telefone_primario', 'telefone_secundario', 'contato_emergencia'], 'string', 'max' => 15],
             [['cpf'], 'string', 'max' => 11],
-            [['cpf'], 'unique'],
-            [['email'], 'unique'],
-            [['id_usuario'], 'unique'],
-            [['id_usuario'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::class, 'targetAttribute' => ['id_usuario' => 'id']],
+            [['cpf', 'email'], 'unique'],
+            [['documento'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf, doc, docx, jpg, png'], // Validação do arquivo
         ];
     }
 
@@ -90,6 +90,7 @@ class Paciente extends \yii\db\ActiveRecord
             'nome_emergencia' => 'Nome Emergencia',
             'contato_emergencia' => 'Contato Emergencia',
             'id_usuario' => 'Id Usuario',
+            'documento' => 'Documento (PDF ou Imagem)',
         ];
     }
 
