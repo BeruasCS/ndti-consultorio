@@ -1,51 +1,52 @@
 <?php
 
-/** @var yii\web\View $this */
+use yii\helpers\Html;
+use yii\helpers\Url;
 
-$this->title = 'My Yii Application';
+$this->title = 'Consultório Vem pra Moc';
 ?>
 <div class="site-index">
 
-    <div class="jumbotron text-center bg-transparent mt-5 mb-5">
-        <h1 class="display-4">Congratulations!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="https://www.yiiframework.com">Get started with Yii</a></p>
+    <div class="jumbotron">
+        <h1>Bem-vindo ao Consultório Vem para Moc!</h1>
+        <p class="lead">Gerencie seus pacientes, médicos e consultas de forma eficiente.</p>
     </div>
 
     <div class="body-content">
 
         <div class="row">
-            <div class="col-lg-4 mb-3">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
+            <div class="col-lg-4">
+                <h2>Gerenciar Pacientes</h2>
+                <p>Gerencie os pacientes cadastrados no sistema.</p>
+                <p><?= Html::a('Gerenciar Pacientes', ['paciente/index'], ['class' => 'btn btn-success']) ?></p>
             </div>
             <div class="col-lg-4">
-                <h2>Heading</h2>
+                <h2>Cadastro de Médico</h2>
+                <p>Cadastre novos médicos, atribua especialidades e gerencie horários de atendimento.</p>
+                <p><?= Html::a('Cadastrar Médico', ['medico/create'], ['class' => 'btn btn-success']) ?></p>
+            </div>
+            <div class="col-lg-4">
+                <h2>Especialidades Médicas</h2>
+                <p>Gerencie as especialidades médicas disponíveis no consultório.</p>
+                <p><?= Html::a('Gerenciar Especialidades', ['especialidade/index'], ['class' => 'btn btn-success']) ?></p>
+            </div>
+        </div>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
+        <div class="row">
+            <div class="col-lg-4">
+                <h2>Agendamentos e Consultas</h2>
+                <p>Agende consultas, gerencie faltas e atrasos, e visualize a agenda dos médicos.</p>
+                <p><?= Html::a('Agendar Consulta', ['consulta/create'], ['class' => 'btn btn-success']) ?></p>
+            </div>
+            <div class="col-lg-4">
+                <h2>Prontuário Eletrônico</h2>
+                <p>Visualize e gerencie os prontuários eletrônicos dos pacientes, incluindo diagnósticos e prescrições.</p>
+                <p><?= Html::a('Ver Prontuários', ['prontuario/index'], ['class' => 'btn btn-success']) ?></p>
+            </div>
+            <div class="col-lg-4">
+                <h2>Gestão de Usuários</h2>
+                <p>Gerencie os usuários do sistema, incluindo atendentes, médicos e administradores.</p>
+                <p><?= Html::a('Gerenciar Usuários', ['usuario/index'], ['class' => 'btn btn-success']) ?></p>
             </div>
         </div>
 

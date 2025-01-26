@@ -3,35 +3,16 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
 
-/**
- * This is the model class for table "usuario".
- *
- * @property int $id
- * @property string $nome
- * @property string $email
- * @property string $senha
- * @property string $tipo_usuario
- * @property string|null $data_cadastro
- *
- * @property Administrador $administrador
- * @property Medico $medico
- * @property Paciente $paciente
- * @property Recepcionista $recepcionista
- */
-class Usuario extends \yii\db\ActiveRecord
+class Usuario extends ActiveRecord implements IdentityInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'usuario';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -44,9 +25,6 @@ class Usuario extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [
@@ -59,43 +37,78 @@ class Usuario extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * Gets query for [[Administrador]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getAdministrador()
     {
         return $this->hasOne(Administrador::class, ['id_administrador' => 'id']);
     }
 
-    /**
-     * Gets query for [[Medico]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getMedico()
     {
         return $this->hasOne(Medico::class, ['id_usuario' => 'id']);
     }
 
-    /**
-     * Gets query for [[Paciente]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getPaciente()
     {
         return $this->hasOne(Paciente::class, ['id_usuario' => 'id']);
     }
 
-    /**
-     * Gets query for [[Recepcionista]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getRecepcionista()
     {
         return $this->hasOne(Recepcionista::class, ['id_recepcionista' => 'id']);
+    }
+    // Implementação da IdentityInterface
+
+    public static function findIdentity($id)
+    {
+        return static::findOne($id);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        return null;
+    }
+
+    public static function findByUsername($username)
+    {
+        return static::findOne(['email' => $username]);
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getAuthKey()
+    {
+        return null;
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        return false;
+    }
+    
+    // Método para gerar o hash da senha
+    public function setPassword($password)
+    {
+        $this->senha = Yii::$app->security->generatePasswordHash($password);
+    }
+
+    // Método para validar a senha
+    public function validatePassword($password)
+    {
+        return Yii::$app->security->validatePassword($password, $this->senha);
+    }
+
+    // Antes de salvar um registro, verificar se a senha foi alterada
+     public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isAttributeChanged('senha')) {
+                $this->setPassword($this->senha);
+            }
+            return true;
+        }
+        return false;
     }
 }
