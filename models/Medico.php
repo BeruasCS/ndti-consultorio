@@ -49,6 +49,7 @@ class Medico extends \yii\db\ActiveRecord
             [['email'], 'unique'],
             [['id_usuario'], 'unique'],
             [['id_usuario'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::class, 'targetAttribute' => ['id_usuario' => 'id']],
+          [['disponibilidadeHorarios'], 'safe'],
         ];
     }
 
@@ -66,6 +67,8 @@ class Medico extends \yii\db\ActiveRecord
             'email' => 'Email',
             'horario_atendimento' => 'Horario Atendimento',
             'id_usuario' => 'Id Usuario',
+            'especialidades' => 'Especialidades',
+            'disponibilidadeHorarios' => 'Disponibilidade Horarios',
         ];
     }
 
@@ -128,4 +131,45 @@ class Medico extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Usuario::class, ['id' => 'id_usuario']);
     }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        $especialidadesSelecionadas =  Yii::$app->request->post('especialidades', []);
+        $this->linkEspecialidades($especialidadesSelecionadas);
+
+         $disponibilidadeHorariosSelecionados =  Yii::$app->request->post('disponibilidadeHorarios', []);
+         $this->linkDisponibilidadeHorarios($disponibilidadeHorariosSelecionados);
+    }
+     // Metodo para salvar as especialidades do medico
+    public function linkEspecialidades(array $especialidades)
+    {
+        // First, clear existing relations:
+        Medicoespecialidade::deleteAll(['medico_id' => $this->id]);
+
+        // Then, add new relations:
+        foreach ($especialidades as $especialidadeId) {
+            $medicoEspecialidade = new Medicoespecialidade();
+            $medicoEspecialidade->medico_id = $this->id;
+            $medicoEspecialidade->especialidade_id = $especialidadeId;
+            $medicoEspecialidade->save();
+        }
+    }
+      // Metodo para salvar as disponibilidadeHorarios do medico
+    public function linkDisponibilidadeHorarios(array $disponibilidadeHorarios)
+      {
+          // First, clear existing relations:
+          Disponibilidadehorario::deleteAll(['medico_id' => $this->id]);
+
+           // Then, add new relations:
+          foreach ($disponibilidadeHorarios as $disponibilidadeHorario) {
+              $horarioDisponibilidade = new Disponibilidadehorario();
+              $horarioDisponibilidade->medico_id = $this->id;
+              $horarioDisponibilidade->dia_da_semana = $disponibilidadeHorario['dia_da_semana'];
+              $horarioDisponibilidade->horario_inicio = $disponibilidadeHorario['horario_inicio'];
+              $horarioDisponibilidade->horario_fim = $disponibilidadeHorario['horario_fim'];
+             $horarioDisponibilidade->save();
+         }
+      }
 }

@@ -4,6 +4,7 @@ use yii\helpers\Html;
 
 /** @var yii\web\View $this */
 /** @var app\models\Medico $model */
+/** @var array $especialidades */
 
 $this->title = 'Update Medico: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Medicos', 'url' => ['index']];
@@ -16,6 +17,7 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <?= $this->render('_form', [
         'model' => $model,
+        'especialidades' => $especialidades,
     ]) ?>
 
 </div>
