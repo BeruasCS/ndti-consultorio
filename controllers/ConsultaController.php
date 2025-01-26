@@ -7,6 +7,12 @@ use app\models\ConsultaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Paciente;
+use app\models\Medico;
+use app\models\Especialidade;
+use app\models\Disponibilidadehorario;
+use Yii;
+
 
 /**
  * ConsultaController implements the CRUD actions for Consulta model.
@@ -29,6 +35,23 @@ class ConsultaController extends Controller
                 ],
             ]
         );
+    }
+
+     public function beforeAction($action)
+    {
+      if (parent::beforeAction($action)) {
+          if (!Yii::$app->user->isGuest) {
+              $usuario = Yii::$app->user->identity;
+               if($action->id == 'index' || $action->id == 'view'){ // Permitir o acesso a action index e view para todos os usuarios
+                  return true;
+               }/**
+                if ($usuario->tipo_usuario !== 'administrador' && $usuario->tipo_usuario !== 'recepcionista') {
+                   throw new \yii\web\ForbiddenHttpException('Você não tem permissão para acessar esta funcionalidade.');
+                 } */
+          }
+          return true;
+      }
+      return false;
     }
 
     /**
@@ -66,21 +89,30 @@ class ConsultaController extends Controller
      * @return string|\yii\web\Response
      */
     public function actionCreate()
-    {
+     {
         $model = new Consulta();
+          $pacientes = Paciente::find()->all();
+          $medicos = Medico::find()->all();
+          $especialidades = Especialidade::find()->all();
+          $disponibilidades = Disponibilidadehorario::find()->all();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
+
+         if ($this->request->isPost) {
+              if ($model->load($this->request->post()) && $model->save()) {
+               return $this->redirect(['view', 'id' => $model->id]);
+             }
         } else {
-            $model->loadDefaultValues();
+              $model->loadDefaultValues();
         }
+       return $this->render('create', [
+          'model' => $model,
+          'pacientes' => $pacientes,
+            'medicos' => $medicos,
+           'especialidades' => $especialidades,
+           'disponibilidades' => $disponibilidades
+      ]);
+      }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
 
     /**
      * Updates an existing Consulta model.

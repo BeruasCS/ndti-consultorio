@@ -8,47 +8,56 @@ $this->title = 'Consultório Vem pra Moc';
 <div class="site-index">
 
     <div class="jumbotron">
-        <h1>Bem-vindo ao Consultório Vem para Moc!</h1>
-        <p class="lead">Gerencie seus pacientes, médicos e consultas de forma eficiente.</p>
+        <h1>Bem-vindo ao Consultório Vem pra Moc!</h1>
+        <p class="lead">Interaja, gerencie e administre de forma conveniente e segura.</p>
     </div>
 
     <div class="body-content">
 
         <div class="row">
             <div class="col-lg-4">
-                <h2>Gerenciar Pacientes</h2>
-                <p>Gerencie os pacientes cadastrados no sistema.</p>
+                <h2>Pacientes</h2>
+                <p>Gerencie os dados dos pacientes cadastrados.</p>
                 <p><?= Html::a('Gerenciar Pacientes', ['paciente/index'], ['class' => 'btn btn-success']) ?></p>
             </div>
             <div class="col-lg-4">
-                <h2>Cadastro de Médico</h2>
-                <p>Cadastre novos médicos, atribua especialidades e gerencie horários de atendimento.</p>
-                <p><?= Html::a('Cadastrar Médico', ['medico/create'], ['class' => 'btn btn-success']) ?></p>
+                <h2>Médicos</h2>
+                 <p>Cadastre e gerencie os médicos do consultório.</p>
+                <p><?= Html::a('Gerenciar Médicos', ['medico/create'], ['class' => 'btn btn-success']) ?></p>
             </div>
             <div class="col-lg-4">
-                <h2>Especialidades Médicas</h2>
-                <p>Gerencie as especialidades médicas disponíveis no consultório.</p>
+                <h2>Especialidades</h2>
+                 <p>Gerencie as especialidades médicas disponíveis.</p>
                 <p><?= Html::a('Gerenciar Especialidades', ['especialidade/index'], ['class' => 'btn btn-success']) ?></p>
             </div>
         </div>
 
         <div class="row">
             <div class="col-lg-4">
-                <h2>Agendamentos e Consultas</h2>
-                <p>Agende consultas, gerencie faltas e atrasos, e visualize a agenda dos médicos.</p>
+                <h2>Agendamentos</h2>
+                 <p>Agende e controle as consultas do consultório.</p>
                 <p><?= Html::a('Agendar Consulta', ['consulta/create'], ['class' => 'btn btn-success']) ?></p>
             </div>
-            <div class="col-lg-4">
-                <h2>Prontuário Eletrônico</h2>
-                <p>Visualize e gerencie os prontuários eletrônicos dos pacientes, incluindo diagnósticos e prescrições.</p>
+          <div class="col-lg-4">
+                <h2>Prontuários</h2>
+               <p>Gerencie os prontuários eletrônicos dos pacientes.</p>
                 <p><?= Html::a('Ver Prontuários', ['prontuario/index'], ['class' => 'btn btn-success']) ?></p>
             </div>
             <div class="col-lg-4">
-                <h2>Gestão de Usuários</h2>
-                <p>Gerencie os usuários do sistema, incluindo atendentes, médicos e administradores.</p>
+                <h2>Usuários</h2>
+                  <p>Gerencie os usuários do sistema.</p>
                 <p><?= Html::a('Gerenciar Usuários', ['usuario/index'], ['class' => 'btn btn-success']) ?></p>
             </div>
+             </div>
+
+         <div class="row">
+              <div class="col-lg-12 text-center mt-3">
+                   <h2>Agendamento Rápido</h2>
+                  <p>Clique no botão abaixo para agendar uma nova consulta rapidamente.</p>
+                  <p><?= Html::a('Agendar Consulta', ['consulta/create'], ['class' => 'btn btn-success']) ?></p>
+                </div>
         </div>
+
 
     </div>
 </div>
